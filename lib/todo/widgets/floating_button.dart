@@ -20,7 +20,6 @@ class FloatingButton extends StatelessWidget {
                 title: Text('Add Task'),
                 content: TextField(
                   onChanged: (value) {
-                    print(value);
                     func( value);
                   },
                 ),
