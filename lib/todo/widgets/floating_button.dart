@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FloatingButton extends StatelessWidget {
-  FloatingButton({Key? key, required this.addTask, required this.names})
+  FloatingButton({Key? key, required this.addTask, required this.func})
       : super(key: key);
   final Function addTask;
-  late final String names;
+  String callback ="";
+  final Function func;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -19,8 +20,8 @@ class FloatingButton extends StatelessWidget {
                 title: Text('Add Task'),
                 content: TextField(
                   onChanged: (value) {
-                    names = value;
-                    print(names);
+                    print(value);
+                    func( value);
                   },
                 ),
                 actions: [

@@ -9,17 +9,17 @@ class Todo extends StatefulWidget {
 
 class _TodoState extends State<Todo> {
   List<String> task = [];
-  String name = "hello";
+  String _name = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingButton(
+        func: function,
         addTask: () {
           setState(() {
-            task.add(name);
+            task.add(_name);
           });
         },
-        names: name,
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -29,19 +29,17 @@ class _TodoState extends State<Todo> {
       body: ListView.builder(
         itemCount: task.length,
         itemBuilder: (context, index) {
-          return Dismissible(
-            key: Key(task[index]),
-            child: CustomCard(
+          return  CustomCard(
                 cardState: () {
                   setState(() {
                     task.removeAt(index);
                   });
                 },
                 index: index,
-                task: task),
-          );
+                task: task);
         },
       ),
     );
   }
+  function(value) => setState(() => _name = value);
 }

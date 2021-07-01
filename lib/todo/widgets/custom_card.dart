@@ -8,7 +8,10 @@ class CustomCard extends StatelessWidget{
   CustomCard({required this.index,required this.task,required this.cardState});
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return
+      Dismissible(
+        key: Key(task[index]),
+      child: Card(
       elevation: 4,
       margin: EdgeInsets.all(8),
       shape: RoundedRectangleBorder(
@@ -25,6 +28,7 @@ class CustomCard extends StatelessWidget{
           ),
         ),
       ),
-    );
+    ),
+      );
   }
 }
