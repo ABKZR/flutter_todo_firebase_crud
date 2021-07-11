@@ -1,9 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_apps/todo/widgets/custom_card.dart';
 import 'package:flutter_apps/todo/widgets/floating_button.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Todo extends StatefulWidget {
   @override
@@ -11,38 +9,32 @@ class Todo extends StatefulWidget {
 }
 
 class _TodoState extends State<Todo> {
-  List<String> task = [];
-  String _name = "";
+  var _firestore = FirebaseFirestore.instance.collection('tasks').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingButton(
-        func: function,
-        addTask: () {
-          setState(() {
-            task.add(_name);
-          });
-        },
-      ),
+      floatingActionButton: FloatingButton(),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
         title: Text('Todo App'),
       ),
-      body: ListView.builder(
-        itemCount: task.length,
-        itemBuilder: (context, index) {
-          return  CustomCard(
-                cardState: () {
-                  setState(() {
-                    task.removeAt(index);
-                  });
-                },
-                index: index,
-                task: task);
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              return CustomCard(index: index, snapshot: snapshot);
+            },
+          );
         },
       ),
     );
   }
-  function(value) => setState(() => _name = value);
 }

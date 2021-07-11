@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class FloatingButton extends StatelessWidget {
-  FloatingButton({Key? key, required this.addTask, required this.func})
-      : super(key: key);
-  final Function addTask;
-  String callback ="";
-  final Function func;
+ 
+ final TextEditingController _task = TextEditingController();
+ final TextEditingController _description = TextEditingController();
+ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -18,17 +20,43 @@ class FloatingButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 title: Text('Add Task'),
-                content: TextField(
-                  onChanged: (value) {
-                    func( value);
-                  },
+                content: Column(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _task,
+                        decoration: InputDecoration(
+                          hintText: 'Tasks'
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _description,
+                        decoration: InputDecoration(
+                          hintText: 'description'
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 actions: [
                   TextButton(
                     onPressed: () {
-
-                      addTask();
-                      Navigator.pop(context);
+                      if (_task.text.isNotEmpty) {
+                        _firestore.collection('tasks').add({
+                          'task': _task.text,
+                          'description': _description.text,
+                          'createdOn': DateTime.now(),
+                        }).then((value) {
+                          Navigator.pop(context);
+                          _task.clear();
+                          print(value.id);
+                        }).catchError((error) {
+                          print(error);
+                        });
+                      }
+                      //addTask();
                     },
                     child: Text('Add'),
                   )
