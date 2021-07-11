@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_apps/todo/widgets/custom_card.dart';
 import 'package:flutter_apps/todo/widgets/floating_button.dart';
 
-class Todo extends StatefulWidget {
-  @override
-  _TodoState createState() => _TodoState();
-}
-
-class _TodoState extends State<Todo> {
+class Todo extends StatelessWidget {
   var _firestore = FirebaseFirestore.instance.collection('tasks').snapshots();
   @override
   Widget build(BuildContext context) {
